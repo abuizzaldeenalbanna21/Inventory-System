@@ -1,0 +1,154 @@
+Asset Pro Web - Page, API, and source locations
+موقع Asset Pro - الصفحات وواجهات API ومواقع الملفات
+===============================================================================
+
+PUBLIC URLS / الروابط العامة
+
+Website: http://localhost:8080/asset-pro
+Sign-in: http://localhost:8080/asset-pro/sign-in
+Database health: http://localhost:8080/api/web/healthz
+
+FRONTEND ROUTES / مسارات الواجهة
+
+The router is configured in:
+  artifacts/asset-pro-web/src/App.tsx
+
+The API is hosted by the ASP.NET Core application at the repository root.
+Browser routes are relative to /asset-pro.
+
+URL: /
+Page: Landing / الصفحة الرئيسية
+Frontend: pages/home.tsx (HomeRoute, Landing)
+Backend: GET /api/web/auth/me is used to detect an existing session.
+
+URL: /sign-in
+Page: Sign in / تسجيل الدخول
+Frontend: pages/sign-in.tsx (SignInPage)
+Backend: POST /api/login; the API sets the authentication cookie.
+
+URL: /dashboard
+Page: Dashboard / لوحة التحكم (authentication required)
+Frontend: pages/dashboard.tsx (DashboardPage)
+Backend:
+  GET /api/web/healthz
+  GET /api/web/dashboard/summary
+  GET /api/web/dashboard/activity
+
+URL: /modules/employee-devices
+Page: Employee devices / أجهزة الموظفين (authentication required)
+Frontend: pages/module-page.tsx and components/records-view.tsx
+Backend: GET /api/web/modules,
+  GET /api/web/modules/employee-devices/schema,
+  GET, POST /api/web/modules/records,
+  GET, PATCH, DELETE /api/web/modules/employee-devices/records/{recordId},
+  POST /api/web/modules/employee-devices/records/{recordId}/status,
+  GET /api/web/modules/employee-devices/records/{recordId}/history.
+
+URL: /modules/network-assets
+Page: Network assets / أصول الشبكة (authentication required)
+Frontend: pages/module-page.tsx and components/records-view.tsx
+Backend: The module schema, list, create, record, status, history, and delete
+  endpoints above, using moduleKey=network-assets.
+
+URL: /modules/employees
+Page: Employees / الموظفون (authentication required)
+Frontend: pages/module-page.tsx and components/records-view.tsx
+Backend: The module schema, list, create, record, update, and delete endpoints
+  above, using moduleKey=employees.
+
+URL: /modules/it-store
+Page: IT store / مخزون تقنية المعلومات (authentication required)
+Frontend: pages/module-page.tsx and components/records-view.tsx
+Backend: The module schema, list, create, record, update, and delete endpoints
+  above, using moduleKey=it-store.
+
+URL: /modules/{moduleKey}/{recordId}
+Page: Asset record details / تفاصيل سجل الأصل (authentication required)
+Frontend: pages/record-page.tsx and components/records-view.tsx
+Backend:
+  GET /api/web/modules/{moduleKey}/records/{recordId}
+  GET /api/web/modules/{moduleKey}/records/{recordId}/history
+  PATCH /api/web/modules/{moduleKey}/records/{recordId}
+
+URL: /reports/stored, /reports/maintenance, /reports/damaged,
+     /reports/consumed, /reports/maintenance-logs
+Page: Inventory and maintenance reports / تقارير المخزون والصيانة
+Frontend: pages/report-page.tsx and components/records-view.tsx
+Backend: GET /api/web/reports?reportKey={reportKey}
+
+URL: /movements
+Page: Movements / الحركات (authentication required)
+Frontend: pages/movements.tsx
+Backend: POST /api/web/movements
+
+URL: /asset-tags
+Page: Asset tags / ملصقات الأصول (authentication required)
+Frontend: pages/asset-tags.tsx
+Backend:
+  GET /api/web/asset-tags
+  POST /api/asset-tags/generate-all
+
+URL: /settings
+Page: Organization settings / إعدادات المؤسسة (authentication required)
+Frontend: pages/settings.tsx
+Backend:
+  GET /api/settings/organization
+  GET /api/web/settings/lookups
+
+Unknown URL:
+Page: Not found / الصفحة غير موجودة
+Frontend: pages/not-found.tsx
+
+SHARED FRONTEND FILES / ملفات الواجهة المشتركة
+
+artifacts/asset-pro-web/src/App.tsx
+  Router, authentication guards, React Query, and providers.
+artifacts/asset-pro-web/src/pages/
+  Route-specific page components.
+artifacts/asset-pro-web/src/components/shell.tsx
+  Shared application shell and navigation.
+artifacts/asset-pro-web/src/components/shared-ui.tsx
+  Shared web UI components.
+artifacts/asset-pro-web/src/components/records-view.tsx
+  Record table, form, and record-detail UI shared by modules and reports.
+artifacts/asset-pro-web/src/hooks/use-language.ts
+  Language selection and document direction.
+artifacts/asset-pro-web/src/translations.ts
+  Arabic and English translations and localized lookup values.
+artifacts/asset-pro-web/src/index.css
+  Shared styling and responsive RTL/LTR layout.
+artifacts/asset-pro-web/index.html
+  Initial document metadata, language, and direction.
+lib/api-client-react/src/generated/api.ts
+  Generated frontend React Query API client.
+lib/api-client-react/src/custom-fetch.ts
+  Shared same-origin requests and cookie handling.
+lib/api-spec/openapi.yaml
+  OpenAPI contract used to generate the API client.
+
+BACKEND / الواجهة الخلفية
+
+../Program.cs
+  ASP.NET Core startup, SQL connection, database initialization, authentication,
+  POST /api/login, static web hosting, and SPA fallback.
+../WebAppEndpoints.cs
+  Authenticated /api/web dashboard, modules, records, reports, movements,
+  lookups, and asset-tag listing endpoints.
+
+DATABASE / قاعدة البيانات
+
+The website and mobile app use the same ASP.NET Core API and SQL Server
+database. The connection string is in ../appsettings.json under
+ConnectionStrings:InventoryDb and targets .\SQLEXPRESS / InventoryDB.
+GET /api/web/healthz reports whether the API can connect to the database.
+
+RUNNING / تشغيل الموقع
+
+See ../RUN_WEBSITE.md for the full Windows startup, verification, and
+troubleshooting steps.
+
+LANGUAGES / اللغات
+
+The language button switches Arabic and English and saves the selection in
+browser local storage. Arabic uses right-to-left layout; English uses
+left-to-right layout.

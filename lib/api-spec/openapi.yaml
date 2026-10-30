@@ -1,0 +1,664 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.2.0
+  description: Asset Pro inventory and asset-management API
+servers:
+  - url: /api/web
+    description: Web API routes; mobile API paths remain unchanged
+tags:
+  - name: health
+  - name: dashboard
+  - name: modules
+  - name: reports
+  - name: movements
+  - name: settings
+  - name: asset-tags
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Check API and database connectivity
+      responses:
+        "200":
+          description: Service status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get live inventory totals and status counts
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+  /dashboard/activity:
+    get:
+      operationId: getDashboardActivity
+      tags: [dashboard]
+      summary: Get recent inventory activity
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: Recent activity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+  /auth/me:
+    get:
+      operationId: getCurrentUser
+      tags: [auth]
+      summary: Get the signed-in user's application profile and permissions
+      responses:
+        "200":
+          description: Application user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurrentUser"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /modules:
+    get:
+      operationId: listModules
+      tags: [modules]
+      summary: List available Asset Pro modules
+      responses:
+        "200":
+          description: Available modules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ModuleDefinition"
+  /modules/{moduleKey}/schema:
+    get:
+      operationId: getModuleSchema
+      tags: [modules]
+      summary: Get database-driven columns, form fields, and filters for a module
+      parameters:
+        - $ref: "#/components/parameters/ModuleKey"
+      responses:
+        "200":
+          description: Dynamic module schema
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModuleSchema"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /modules/records:
+    get:
+      operationId: listModuleRecords
+      tags: [modules]
+      summary: Search and page through module records
+      parameters:
+        - $ref: "#/components/parameters/ModuleKeyQuery"
+        - $ref: "#/components/parameters/Search"
+        - $ref: "#/components/parameters/Branch"
+        - $ref: "#/components/parameters/Status"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Matching records
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecordPage"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      operationId: createModuleRecord
+      tags: [modules]
+      summary: Create a record in an allowed module
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DynamicRecordInput"
+      responses:
+        "201":
+          description: Created record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DynamicRecord"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /modules/{moduleKey}/records/{recordId}:
+    get:
+      operationId: getModuleRecord
+      tags: [modules]
+      summary: Get one module record
+      parameters:
+        - $ref: "#/components/parameters/ModuleKey"
+        - $ref: "#/components/parameters/RecordId"
+      responses:
+        "200":
+          description: Record details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DynamicRecord"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      operationId: updateModuleRecord
+      tags: [modules]
+      summary: Update an allowed record
+      parameters:
+        - $ref: "#/components/parameters/ModuleKey"
+        - $ref: "#/components/parameters/RecordId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DynamicRecordInput"
+      responses:
+        "200":
+          description: Updated record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DynamicRecord"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      operationId: deleteModuleRecord
+      tags: [modules]
+      summary: Delete an allowed record
+      parameters:
+        - $ref: "#/components/parameters/ModuleKey"
+        - $ref: "#/components/parameters/RecordId"
+      responses:
+        "204":
+          description: Record deleted
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /modules/{moduleKey}/records/{recordId}/status:
+    post:
+      operationId: changeRecordStatus
+      tags: [modules]
+      summary: Change a device status and record the reason
+      parameters:
+        - $ref: "#/components/parameters/ModuleKey"
+        - $ref: "#/components/parameters/RecordId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StatusChangeInput"
+      responses:
+        "200":
+          description: Updated record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DynamicRecord"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /modules/{moduleKey}/records/{recordId}/history:
+    get:
+      operationId: getRecordHistory
+      tags: [modules]
+      summary: Get status and maintenance history for a record
+      parameters:
+        - $ref: "#/components/parameters/ModuleKey"
+        - $ref: "#/components/parameters/RecordId"
+      responses:
+        "200":
+          description: History entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+  /reports:
+    get:
+      operationId: getReport
+      tags: [reports]
+      summary: Get a live status or consumption report
+      parameters:
+        - $ref: "#/components/parameters/ReportKey"
+        - $ref: "#/components/parameters/Search"
+        - $ref: "#/components/parameters/Branch"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Report data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecordPage"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /movements:
+    post:
+      operationId: createMovement
+      tags: [movements]
+      summary: Record a device or stock movement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MovementInput"
+      responses:
+        "201":
+          description: Saved movement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActivityItem"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /settings/organization:
+    get:
+      operationId: getOrganizationSettings
+      tags: [settings]
+      summary: Get branches, departments, and their mappings
+      responses:
+        "200":
+          description: Organization settings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganizationSettings"
+  /settings/lookups:
+    get:
+      operationId: getSettingsLookups
+      tags: [settings]
+      summary: Get dynamic lookup values for forms and filters
+      responses:
+        "200":
+          description: Lookup groups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LookupGroup"
+  /asset-tags:
+    get:
+      operationId: listAssetTags
+      tags: [asset-tags]
+      summary: Search generated asset tags
+      parameters:
+        - $ref: "#/components/parameters/Search"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Asset tags
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecordPage"
+  /asset-tags/generate-all:
+    post:
+      operationId: generateAllAssetTags
+      tags: [asset-tags]
+      summary: Generate missing tags for eligible assets
+      responses:
+        "200":
+          description: Tag generation result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenerateTagsResult"
+components:
+  parameters:
+    ModuleKey:
+      name: moduleKey
+      in: path
+      required: true
+      schema:
+        type: string
+    ModuleKeyQuery:
+      name: moduleKey
+      in: query
+      required: true
+      schema:
+        type: string
+    ReportKey:
+      name: reportKey
+      in: query
+      required: true
+      schema:
+        type: string
+        enum: [stored, maintenance, damaged, consumed, maintenance-logs]
+    RecordId:
+      name: recordId
+      in: path
+      required: true
+      schema:
+        type: string
+    Search:
+      name: search
+      in: query
+      schema:
+        type: string
+    Branch:
+      name: branch
+      in: query
+      schema:
+        type: string
+    Status:
+      name: status
+      in: query
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PageSize:
+      name: pageSize
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 25
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+        database:
+          type: string
+          enum: [connected, not_configured, unreachable]
+        message:
+          type: ["string", "null"]
+      required: [status, database]
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        code:
+          type: string
+      required: [error]
+    DashboardSummary:
+      type: object
+      properties:
+        totalDevices:
+          type: integer
+        inUseDevices:
+          type: integer
+        storedDevices:
+          type: integer
+        maintenanceDevices:
+          type: integer
+        damagedDevices:
+          type: integer
+        networkAssets:
+          type: integer
+        employees:
+          type: integer
+        stockItems:
+          type: integer
+        lowStockItems:
+          type: integer
+        consumedItems:
+          type: integer
+      required:
+        - totalDevices
+        - inUseDevices
+        - storedDevices
+        - maintenanceDevices
+        - damagedDevices
+        - networkAssets
+        - employees
+        - stockItems
+        - lowStockItems
+        - consumedItems
+    CurrentUser:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+        email:
+          type: ["string", "null"]
+        permissions:
+          type: object
+          additionalProperties:
+            type: boolean
+      required: [id, displayName, permissions]
+    ActivityItem:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        actor:
+          type: ["string", "null"]
+        occurredAt:
+          type: ["string", "null"]
+        moduleKey:
+          type: ["string", "null"]
+        recordId:
+          type: ["string", "null"]
+      required: [id, title]
+    ModuleDefinition:
+      type: object
+      properties:
+        key:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        kind:
+          type: string
+          enum: [records, report, workflow]
+        route:
+          type: string
+        searchable:
+          type: boolean
+        supportsCreate:
+          type: boolean
+        supportsEdit:
+          type: boolean
+      required: [key, title, description, kind, route]
+    FieldDefinition:
+      type: object
+      properties:
+        key:
+          type: string
+        label:
+          type: string
+        inputType:
+          type: string
+          enum: [text, number, select, date, boolean, textarea, readonly, secret]
+        required:
+          type: boolean
+        visible:
+          type: boolean
+        editable:
+          type: boolean
+        options:
+          type: array
+          items:
+            type: string
+        order:
+          type: integer
+      required: [key, label, inputType, required, visible, editable, order]
+    ModuleSchema:
+      type: object
+      properties:
+        module:
+          $ref: "#/components/schemas/ModuleDefinition"
+        fields:
+          type: array
+          items:
+            $ref: "#/components/schemas/FieldDefinition"
+        columns:
+          type: array
+          items:
+            $ref: "#/components/schemas/FieldDefinition"
+        filters:
+          type: array
+          items:
+            $ref: "#/components/schemas/FieldDefinition"
+      required: [module, fields, columns, filters]
+    DynamicRecord:
+      type: object
+      properties:
+        id:
+          type: string
+      required: [id]
+      additionalProperties: true
+    DynamicRecordInput:
+      type: object
+      additionalProperties: true
+    RecordPage:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/DynamicRecord"
+        total:
+          type: integer
+        page:
+          type: integer
+        pageSize:
+          type: integer
+      required: [data, total, page, pageSize]
+    StatusChangeInput:
+      type: object
+      properties:
+        status:
+          type: string
+        reason:
+          type: ["string", "null"]
+      required: [status]
+    MovementInput:
+      type: object
+      properties:
+        moduleKey:
+          type: string
+        recordId:
+          type: ["string", "null"]
+        action:
+          type: string
+          enum: [assign, store, maintenance, damaged, restore, consume, transfer]
+        branch:
+          type: ["string", "null"]
+        quantity:
+          type: ["number", "null"]
+        reason:
+          type: ["string", "null"]
+        details:
+          type: ["string", "null"]
+      required: [moduleKey, action]
+    OrganizationItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        enabled:
+          type: boolean
+      required: [id, name, enabled]
+    OrganizationMapping:
+      type: object
+      properties:
+        branchId:
+          type: string
+        departmentId:
+          type: string
+      required: [branchId, departmentId]
+    OrganizationSettings:
+      type: object
+      properties:
+        branches:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationItem"
+        departments:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationItem"
+        mappings:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrganizationMapping"
+      required: [branches, departments, mappings]
+    LookupGroup:
+      type: object
+      properties:
+        category:
+          type: string
+        values:
+          type: array
+          items:
+            type: string
+      required: [category, values]
+    GenerateTagsResult:
+      type: object
+      properties:
+        generated:
+          type: integer
+        skipped:
+          type: integer
+        message:
+          type: string
+      required: [generated, skipped, message]
