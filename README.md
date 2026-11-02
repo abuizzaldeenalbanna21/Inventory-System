@@ -60,19 +60,19 @@ Note: The backend API and mobile application are not included in this repository
 
 # Installation and Setup
 
-## Clone the repository:
+### Clone the repository:
 
 git clone https://github.com/abuizzaldeenalbanna21/Inventory-System.git
 
-## Navigate to the project directory and install dependencies:
+### Navigate to the project directory and install dependencies:
 
 pnpm install
 
-## Run type checking:
+### Run type checking:
 
 pnpm --filter @workspace/asset-pro-web typecheck
 
-## Build the frontend:
+### Build the frontend:
 
 pnpm --filter @workspace/asset-pro-web build
 
@@ -84,7 +84,7 @@ To run the integrated application, start the separate ASP.NET Core project from 
 
 dotnet run --project InventoryApi.csproj --no-launch-profile
 
-## Then access the application at:
+### Then access the application at:
 
 http://localhost:8080/asset-pro
 
@@ -92,12 +92,12 @@ The API database connection is configured through "ConnectionStrings:InventoryDb
 
 Frontend Development Mode
 
-## To run the frontend separately during development:
+### To run the frontend separately during development:
 
 $env:PORT = "5173"
 pnpm --filter @workspace/asset-pro-web dev
 
-## The Vite development server proxies "/api" requests to:
+### The Vite development server proxies "/api" requests to:
 
 http://127.0.0.1:8080
 
