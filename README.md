@@ -1,10 +1,10 @@
-Inventory System
+## Inventory System
 
 Inventory System is a bilingual web application designed to manage inventory and IT assets efficiently. It provides a centralized platform for tracking assets, managing employees and devices, monitoring inventory activities, and organizing IT resources.
 
 The application supports both Arabic (RTL) and English (LTR), offering a responsive interface for desktop and mobile browsers.
 
-Key Features
+## Key Features
 
 - Dashboard: View inventory statistics, connection status, and recent activities.
 - Employee Device Management: Manage and track devices assigned to employees.
@@ -19,9 +19,9 @@ Key Features
 - Bilingual Interface: Switch between Arabic and English with RTL/LTR layout support.
 - Responsive Design: Access the application across desktop and mobile devices.
 
-Technologies Used
+## Technologies Used
 
-Frontend
+* Frontend
 
 - React
 - TypeScript
@@ -29,18 +29,18 @@ Frontend
 - React Query
 - CSS
 
-Backend
+* Backend
 
 - ASP.NET Core
 - .NET 8
 
-Database
+* Database
 
 - Microsoft SQL Server
 
-Project Architecture
+# Project Architecture
 
-The project is organized into several main components:
+* The project is organized into several main components:
 
 - "artifacts/asset-pro-web/" – Contains the main React and Vite frontend application.
 - "artifacts/mockup-sandbox/" – Contains an isolated component preview workspace.
