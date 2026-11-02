@@ -74,7 +74,7 @@ The frontend communicates with an ASP.NET Core Web API hosted in a separate `Inv
 
 ```bash
 git clone https://github.com/abuizzaldeenalbanna21/Inventory-System.git
-````
+```
 
 ### 2\. Install dependencies
 
@@ -129,7 +129,7 @@ http://127.0.0.1:8080
 
 You can configure a different API host using the `API_ORIGIN` environment variable.
 
-### Source Code Structure
+## Source Code Structure
 
 * `src/pages/` – Route-level application pages.
 
@@ -141,7 +141,7 @@ You can configure a different API host using the `API_ORIGIN` environment variab
 
 * `src/index.css` – Shared styles, responsive layouts, and RTL/LTR support.
 
-### Security and Configuration
+## Security and Configuration
 
 * Keep environment variables and credentials in local configuration files.
 
@@ -151,6 +151,6 @@ You can configure a different API host using the `API_ORIGIN` environment variab
 
 * Keep local database files and development-specific configuration files excluded from version control.
 
-### Credits
+## Credits
 
 Developed by Ali and Anas.
