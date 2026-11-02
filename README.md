@@ -1,4 +1,4 @@
-## Inventory System
+# Inventory System
 
 Inventory System is a bilingual web application designed to manage inventory and IT assets efficiently. It provides a centralized platform for tracking assets, managing employees and devices, monitoring inventory activities, and organizing IT resources.
 
