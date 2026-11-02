@@ -86,22 +86,12 @@ project for Windows startup and troubleshooting details.
 - `artifacts/asset-pro-web/src/index.css` contains shared themes, responsive
   layouts, and RTL/LTR styling.
 
-# Environment variables and secrets
-.env
-.env.*
-!.env.example
+## Security and configuration
 
-# Local configuration and credentials
-appsettings.Local.json
-appsettings.Development.local.json
-*.pfx
-*.pem
-*.key
-
-# Database files
-*.db
-*.sqlite
-*.sqlite3
+- Keep environment variables and credentials in local configuration files.
+- Never commit passwords, API keys, database connection strings, or private certificates.
+- Use .env.example with placeholder values to document required environment variables.
+- Local database files and development-specific configuration files should remain excluded from version control.
 
 ## Credits
 
