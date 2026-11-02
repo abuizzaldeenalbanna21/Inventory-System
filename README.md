@@ -1,98 +1,123 @@
-# Inventory System 
+Inventory System
 
-Asset Pro is a bilingual inventory and IT asset management website. Its
-interface supports Arabic (right-to-left) and English (left-to-right), and
-connects to the ASP.NET Core API and SQL Server database used by the larger
-InventoryApi application.
+Inventory System is a bilingual web application designed to manage inventory and IT assets efficiently. It provides a centralized platform for tracking assets, managing employees and devices, monitoring inventory activities, and organizing IT resources.
 
-## Features
+The application supports both Arabic (RTL) and English (LTR), offering a responsive interface for desktop and mobile browsers.
 
-- Dashboard with inventory totals, connection status, and recent activity.
-- Employee-device, network-asset, employee, and IT stock modules.
-- Asset records, reports, movements, and printable asset tags.
-- Organization settings and shared lookup values.
-- Arabic and English translations with persisted language selection.
-- Responsive layouts for desktop and mobile browsers.
+Key Features
 
-## Architecture
+- Dashboard: View inventory statistics, connection status, and recent activities.
+- Employee Device Management: Manage and track devices assigned to employees.
+- Network Asset Management: Organize and monitor network-related assets.
+- Employee Management: Maintain employee information and related records.
+- IT Stock Management: Manage IT inventory and stock records.
+- Asset Records: Create, view, and manage asset information.
+- Asset Movements: Track asset transfers and movement history.
+- Reports: Access inventory reports and relevant information.
+- Printable Asset Tags: Generate printable tags for asset identification.
+- Organization Settings: Manage organizational settings and shared lookup values.
+- Bilingual Interface: Switch between Arabic and English with RTL/LTR layout support.
+- Responsive Design: Access the application across desktop and mobile devices.
 
-- `artifacts/asset-pro-web/` contains the production React and Vite website.
-- `artifacts/mockup-sandbox/` contains the isolated component preview workspace.
-- `lib/api-client-react/` contains the generated React Query API client.
-- Web API routes are served by the ASP.NET Core application in the parent
-  InventoryApi project. The website and mobile application use the same API
-  host and `InventoryDB`; the API and mobile app are not included in this
-  website repository.
-- Production frontend output is generated at
-  `..\wwwroot\asset-pro` relative to this directory.
+Technologies Used
 
-## Requirements
+Frontend
 
-- Node.js and pnpm.
-- .NET 8 SDK to run the integrated application.
-- SQL Server Express and the configured `InventoryDB` database for
-  API-backed functionality.
+- React
+- TypeScript
+- Vite
+- React Query
+- CSS
 
-## Install and validate
+Backend
 
-Run these commands from the repository root. In the integrated InventoryApi
-workspace, that is the `Website` directory:
+- ASP.NET Core
+- .NET 8
 
-```powershell
+Database
+
+- Microsoft SQL Server
+
+Project Architecture
+
+The project is organized into several main components:
+
+- "artifacts/asset-pro-web/" – Contains the main React and Vite frontend application.
+- "artifacts/mockup-sandbox/" – Contains an isolated component preview workspace.
+- "lib/api-client-react/" – Contains the generated React Query API client.
+
+The frontend communicates with an ASP.NET Core Web API hosted in a separate "InventoryApi" project. Both the website and mobile application use the same API host and SQL Server database ("InventoryDB").
+
+Note: The backend API and mobile application are not included in this repository.
+
+Requirements
+
+- Node.js
+- pnpm
+- .NET 8 SDK
+- SQL Server Express
+- Configured "InventoryDB" database
+
+Installation and Setup
+
+Clone the repository:
+
+git clone https://github.com/abuizzaldeenalbanna21/Inventory-System.git
+
+Navigate to the project directory and install dependencies:
+
 pnpm install
+
+Run type checking:
+
 pnpm --filter @workspace/asset-pro-web typecheck
+
+Build the frontend:
+
 pnpm --filter @workspace/asset-pro-web build
-```
 
-The build command writes the optimized frontend to the parent project's
-`wwwroot\asset-pro` folder.
+The optimized frontend output is generated in the parent project's "wwwroot/asset-pro" directory.
 
-## Run the application
+Running the Application
 
-To run the integrated application, start the separate ASP.NET Core project
-from its `InventoryApi` directory:
+To run the integrated application, start the separate ASP.NET Core project from its "InventoryApi" directory:
 
-```powershell
 dotnet run --project InventoryApi.csproj --no-launch-profile
-```
 
-Then open <http://localhost:8080/asset-pro>. The API database connection is
-configured by `ConnectionStrings:InventoryDb` in the parent project's
-`appsettings.json`. Do not commit credentials or local secrets.
+Then access the application at:
 
-For frontend-only development, run from the repository root:
+http://localhost:8080/asset-pro
 
-```powershell
+The API database connection is configured through "ConnectionStrings:InventoryDb" in the parent project's "appsettings.json".
+
+Frontend Development Mode
+
+To run the frontend separately during development:
+
 $env:PORT = "5173"
 pnpm --filter @workspace/asset-pro-web dev
-```
 
-The Vite development server proxies `/api` requests to
-`http://127.0.0.1:8080` by default. Set `API_ORIGIN` to use a different local
-API host.
+The Vite development server proxies "/api" requests to:
 
-In the integrated InventoryApi workspace, see `RUN_WEBSITE.md` in the parent
-project for Windows startup and troubleshooting details.
+http://127.0.0.1:8080
 
-## Source layout
+You can configure a different API host using the "API_ORIGIN" environment variable.
 
-- `artifacts/asset-pro-web/src/pages/` contains route-level page components.
-- `artifacts/asset-pro-web/src/components/` contains the shared application
-  shell, reusable UI, record views, and UI primitives.
-- `artifacts/asset-pro-web/src/hooks/` contains shared React hooks, including
-  language selection.
-- `artifacts/asset-pro-web/src/translations.ts` contains Arabic and English
-  labels and localized lookup values.
-- `artifacts/asset-pro-web/src/index.css` contains shared themes, responsive
-  layouts, and RTL/LTR styling.
+Source Code Structure
 
-## Security and configuration
+- "src/pages/" – Route-level application pages.
+- "src/components/" – Shared application components and reusable UI elements.
+- "src/hooks/" – Shared React hooks.
+- "src/translations.ts" – Arabic and English translations.
+- "src/index.css" – Shared styles, responsive layouts, and RTL/LTR support.
+
+Security and Configuration
 
 - Keep environment variables and credentials in local configuration files.
 - Never commit passwords, API keys, database connection strings, or private certificates.
-- Use .env.example with placeholder values to document required environment variables.
-- Local database files and development-specific configuration files should remain excluded from version control.
+- Use ".env.example" with placeholder values to document required environment variables.
+- Keep local database files and development-specific configuration files excluded from version control.
 
-## Credits
+Credits
 
 Developed by Ali and Anas.
