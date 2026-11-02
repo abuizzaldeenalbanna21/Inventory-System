@@ -86,6 +86,23 @@ project for Windows startup and troubleshooting details.
 - `artifacts/asset-pro-web/src/index.css` contains shared themes, responsive
   layouts, and RTL/LTR styling.
 
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Local configuration and credentials
+appsettings.Local.json
+appsettings.Development.local.json
+*.pfx
+*.pem
+*.key
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
 ## Credits
 
 Developed by Ali and Anas.
