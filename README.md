@@ -1,4 +1,4 @@
-# Asset Pro Website
+# Inventory System 
 
 Asset Pro is a bilingual inventory and IT asset management website. Its
 interface supports Arabic (right-to-left) and English (left-to-right), and
