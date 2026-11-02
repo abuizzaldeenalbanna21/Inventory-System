@@ -114,8 +114,6 @@ The API database connection is configured through `ConnectionStrings:InventoryDb
 
 ### Frontend Development Mode
 
-### Run the frontend separately during development
-
 ```powershell
 $env:PORT = "5173"
 pnpm --filter @workspace/asset-pro-web dev
