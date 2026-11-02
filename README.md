@@ -76,19 +76,19 @@ The frontend communicates with an ASP.NET Core Web API hosted in a separate `Inv
 git clone https://github.com/abuizzaldeenalbanna21/Inventory-System.git
 ```
 
-### 2\. Install dependencies
+### 2. Install dependencies
 
 ```bash
 pnpm install
 ```
 
-### 3\. Run type checking
+### 3. Run type checking
 
 ```bash
 pnpm --filter @workspace/asset-pro-web typecheck
 ```
 
-### 4\. Build the frontend
+### 4. Build the frontend
 
 ```bash
 pnpm --filter @workspace/asset-pro-web build
