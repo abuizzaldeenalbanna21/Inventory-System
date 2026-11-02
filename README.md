@@ -21,7 +21,7 @@ The application supports both Arabic (RTL) and English (LTR), offering a respons
 
 ## Technologies Used
 
-# Frontend
+### Frontend
 
 - React
 - TypeScript
@@ -29,18 +29,18 @@ The application supports both Arabic (RTL) and English (LTR), offering a respons
 - React Query
 - CSS
 
-# Backend
+### Backend
 
 - ASP.NET Core
 - .NET 8
 
-# Database
+### Database
 
 - Microsoft SQL Server
 
 # Project Architecture
 
-# The project is organized into several main components:
+## The project is organized into several main components:
 
 - "artifacts/asset-pro-web/" – Contains the main React and Vite frontend application.
 - "artifacts/mockup-sandbox/" – Contains an isolated component preview workspace.
@@ -50,7 +50,7 @@ The frontend communicates with an ASP.NET Core Web API hosted in a separate "Inv
 
 Note: The backend API and mobile application are not included in this repository.
 
-## Requirements
+# Requirements
 
 - Node.js
 - pnpm
@@ -58,21 +58,21 @@ Note: The backend API and mobile application are not included in this repository
 - SQL Server Express
 - Configured "InventoryDB" database
 
-## Installation and Setup
+# Installation and Setup
 
-# Clone the repository:
+## Clone the repository:
 
 git clone https://github.com/abuizzaldeenalbanna21/Inventory-System.git
 
-Navigate to the project directory and install dependencies:
+## Navigate to the project directory and install dependencies:
 
 pnpm install
 
-Run type checking:
+## Run type checking:
 
 pnpm --filter @workspace/asset-pro-web typecheck
 
-Build the frontend:
+## Build the frontend:
 
 pnpm --filter @workspace/asset-pro-web build
 
@@ -84,7 +84,7 @@ To run the integrated application, start the separate ASP.NET Core project from 
 
 dotnet run --project InventoryApi.csproj --no-launch-profile
 
-Then access the application at:
+## Then access the application at:
 
 http://localhost:8080/asset-pro
 
@@ -92,12 +92,12 @@ The API database connection is configured through "ConnectionStrings:InventoryDb
 
 Frontend Development Mode
 
-To run the frontend separately during development:
+## To run the frontend separately during development:
 
 $env:PORT = "5173"
 pnpm --filter @workspace/asset-pro-web dev
 
-The Vite development server proxies "/api" requests to:
+## The Vite development server proxies "/api" requests to:
 
 http://127.0.0.1:8080
 
@@ -111,13 +111,13 @@ You can configure a different API host using the "API_ORIGIN" environment variab
 - "src/translations.ts" – Arabic and English translations.
 - "src/index.css" – Shared styles, responsive layouts, and RTL/LTR support.
 
-## Security and Configuration
+# Security and Configuration
 
 - Keep environment variables and credentials in local configuration files.
 - Never commit passwords, API keys, database connection strings, or private certificates.
 - Use ".env.example" with placeholder values to document required environment variables.
 - Keep local database files and development-specific configuration files excluded from version control.
 
-## Credits
+# Credits
 
 Developed by Ali and Anas.
